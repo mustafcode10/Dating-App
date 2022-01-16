@@ -4,7 +4,7 @@ import * as Google from "expo-google-app-auth"
 const AuthContext = createContext({});
 
 const config = {
-    androidClientId: '1036634927114-v4tc5q5f0bspqjqhu9tql7vb3ceb763j.apps.googleusercontent.com',
+    androidClientId: '1036634927114-aie1h7064sbu2cni4s31p22fu0sm9qji.apps.googleusercontent.com',
     iosClientId: '1036634927114-1go12bmc0ccivic8neatt10t8qofl6r8.apps.googleusercontent.com',
     scopes: ["profile", "email" ],
     permissions:["public_profile", "email", "gender", "location"]
