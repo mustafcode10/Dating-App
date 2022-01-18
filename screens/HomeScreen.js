@@ -1,18 +1,19 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button } from 'react-native'
+import { StyleSheet, Text, View, Button, SafeAreaView } from 'react-native'
 import useAuth from "./../hooks/useAuth"
 
 
 
 
+
 const HomeScreen = ({navigation}) => {
-    const {logout} = useAuth()
+    const {user, logout} = useAuth()
     return (
-        <View>
+        <SafeAreaView>
             <Text>Home Screen</Text>
             <Button title="Chat Screen" onPress={()=> navigation.navigate('Chat')}/>
               <Button title="Logout" onPress={logout} />
-        </View>
+        </SafeAreaView>
     )
 }
 
