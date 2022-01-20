@@ -69,6 +69,10 @@ const HomeScreen = ({ navigation }) => {
         <Swiper
         containerStyle={{backgroundColor: 'transparent'}}
           cards={DUMMY_DATA}
+          stackSize={5}
+          cardIndex={0}
+          animateCardOpacity
+          verticalSwipe={false}
           renderCard={(card) => (
             <View key={card.id} style={{backgroundColor: 'white', height: 500, borderRadius: 10}}>
               {/* <Text style={{fontSize: 18, backgroundColor: 'grey'}}>{card.firstName}</Text> */}
