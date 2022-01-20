@@ -70,9 +70,9 @@ const HomeScreen = ({ navigation }) => {
         containerStyle={{backgroundColor: 'transparent'}}
           cards={DUMMY_DATA}
           renderCard={(card) => (
-            <View key={card.id} style={{backgroundColor: '#FF5864', height: 500, borderRadius: 10}}>
-              <Text style={{fontSize: 18, backgroundColor: 'grey'}}>{card.firstName}</Text>
-              <Image style={{ height:500}} source={{uri: card.photoURL}} />
+            <View key={card.id} style={{backgroundColor: 'white', height: 500, borderRadius: 10}}>
+              {/* <Text style={{fontSize: 18, backgroundColor: 'grey'}}>{card.firstName}</Text> */}
+              <Image style={{ height:500, borderRadius: 10}} source={{uri: card.photoURL}} />
             </View>
           )}
         />
