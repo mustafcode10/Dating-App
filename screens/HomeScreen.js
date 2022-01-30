@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useRef} from "react";
 import {
   StyleSheet,
   Text,
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import useAuth from "./../hooks/useAuth";
 import { useTailwind } from "tailwind-rn";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 import Swiper from "react-native-deck-swiper";
 
 const DUMMY_DATA = [
@@ -54,6 +54,7 @@ const DUMMY_DATA = [
 
 const HomeScreen = ({ navigation }) => {
   const { user, logout } = useAuth();
+  const swipeRef = useRef(null)
   const tailwind = useTailwind();
   return (
     <SafeAreaView style={styles.container}>
@@ -79,12 +80,16 @@ const HomeScreen = ({ navigation }) => {
       {/* Cards */}
       <View style={{ flex: 1, marginTop: 10 }}>
         <Swiper
+          ref={swipeRef}
           containerStyle={{ backgroundColor: "transparent" }}
           cards={DUMMY_DATA}
           stackSize={5}
           cardIndex={0}
           animateCardOpacity
           verticalSwipe={false}
+          onSwipedLeft={(cardIndex) => console.log('swipe pass',cardIndex)}
+          onSwipedRight={(cardIndex) => console.log('swipe match',cardIndex)}
+          backgroundColor={"#4FD0E9"}
           overlayLabels={{
             left: {
               title: "NOPE",
@@ -110,13 +115,13 @@ const HomeScreen = ({ navigation }) => {
               style={{
                 position: "relative",
                 backgroundColor: "white",
-                height: 500,
+                height: 550,
                 borderRadius: 10,
               }}
             >
               {/* <Text style={{fontSize: 18, backgroundColor: 'grey'}}>{card.firstName}</Text> */}
               <Image
-                style={{ height: 500, borderRadius: 10 }}
+                style={{ height: 550, borderRadius: 10 }}
                 source={{ uri: card.photoURL }}
               />
               <View
@@ -162,6 +167,14 @@ const HomeScreen = ({ navigation }) => {
       {/* <Text>Home Screen</Text>
       <Button title="Chat Screen" onPress={() => navigation.navigate("Chat")} />
       <Button title="Logout" onPress={logout} /> */}
+      <View style={{ flexDirection: "row", justifyContent: 'space-evenly'}}>
+      <TouchableOpacity onPress={()=> swipeRef.current.swipeLeft()} style={{justifyContent: 'center', height: 60, width: 60, backgroundColor: "#ffe4e1", alignItems: 'center', borderRadius: 60/2,  alignContent: 'center'}}>
+      <Entypo name="cross" size={25} color="red" />
+      </TouchableOpacity>
+     <TouchableOpacity onPress={()=> swipeRef.current.swipeRight()} style={{justifyContent: 'center', height: 60, width: 60, backgroundColor: "#7fffd4", alignItems: 'center',  borderRadius: 60/2, alignContent: 'center'}}>
+      <AntDesign name="heart" size={22} color="green" />
+      </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
