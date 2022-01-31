@@ -1,4 +1,4 @@
-import React,{useRef} from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -29,7 +29,7 @@ const DUMMY_DATA = [
     lastName: "Uzerli",
     photoURL:
       "https://cdn.technosports.co.in/wp-content/uploads/2021/11/Meryem.jpg",
-    age: 38 ,
+    age: 38,
     job: "Actress and Model",
   },
   {
@@ -38,7 +38,7 @@ const DUMMY_DATA = [
     lastName: "Thot",
     photoURL:
       "https://cdn.technosports.co.in/wp-content/uploads/2021/11/Duckie-Thot-1064x1536.jpg",
-    age:  26,
+    age: 26,
     job: "Model",
   },
   {
@@ -54,7 +54,7 @@ const DUMMY_DATA = [
 
 const HomeScreen = ({ navigation }) => {
   const { user, logout } = useAuth();
-  const swipeRef = useRef(null)
+  const swipeRef = useRef(null);
   const tailwind = useTailwind();
   return (
     <SafeAreaView style={styles.container}>
@@ -66,7 +66,7 @@ const HomeScreen = ({ navigation }) => {
             source={{ uri: user.photoURL }}
           />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Modal")}>
           <Image
             style={{ width: 50, height: 50, borderRadius: 50 / 2 }}
             source={require("./../assets/tinder.png")}
@@ -87,8 +87,8 @@ const HomeScreen = ({ navigation }) => {
           cardIndex={0}
           animateCardOpacity
           verticalSwipe={false}
-          onSwipedLeft={(cardIndex) => console.log('swipe pass',cardIndex)}
-          onSwipedRight={(cardIndex) => console.log('swipe match',cardIndex)}
+          onSwipedLeft={(cardIndex) => console.log("swipe pass", cardIndex)}
+          onSwipedRight={(cardIndex) => console.log("swipe match", cardIndex)}
           backgroundColor={"#4FD0E9"}
           overlayLabels={{
             left: {
@@ -113,15 +113,17 @@ const HomeScreen = ({ navigation }) => {
             <View
               key={card.id}
               style={{
-                position: "relative",
+                // position: "relative",
                 backgroundColor: "white",
-                height: 550,
+                height: 500,
                 borderRadius: 10,
+                position: "absolute",
+                width: 360,
               }}
             >
               {/* <Text style={{fontSize: 18, backgroundColor: 'grey'}}>{card.firstName}</Text> */}
               <Image
-                style={{ height: 550, borderRadius: 10 }}
+                style={{ height: 500, borderRadius: 10 }}
                 source={{ uri: card.photoURL }}
               />
               <View
@@ -131,7 +133,7 @@ const HomeScreen = ({ navigation }) => {
                   height: 70,
                   marginTop: 10,
                   position: "absolute",
-                  width: 371.5,
+                  width: 360,
                   bottom: 0,
                 }}
               >
@@ -167,13 +169,35 @@ const HomeScreen = ({ navigation }) => {
       {/* <Text>Home Screen</Text>
       <Button title="Chat Screen" onPress={() => navigation.navigate("Chat")} />
       <Button title="Logout" onPress={logout} /> */}
-      <View style={{ flexDirection: "row", justifyContent: 'space-evenly'}}>
-      <TouchableOpacity onPress={()=> swipeRef.current.swipeLeft()} style={{justifyContent: 'center', height: 60, width: 60, backgroundColor: "#ffe4e1", alignItems: 'center', borderRadius: 60/2,  alignContent: 'center'}}>
-      <Entypo name="cross" size={25} color="red" />
-      </TouchableOpacity>
-     <TouchableOpacity onPress={()=> swipeRef.current.swipeRight()} style={{justifyContent: 'center', height: 60, width: 60, backgroundColor: "#7fffd4", alignItems: 'center',  borderRadius: 60/2, alignContent: 'center'}}>
-      <AntDesign name="heart" size={22} color="green" />
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+        <TouchableOpacity
+          onPress={() => swipeRef.current.swipeLeft()}
+          style={{
+            justifyContent: "center",
+            height: 60,
+            width: 60,
+            backgroundColor: "#ffe4e1",
+            alignItems: "center",
+            borderRadius: 60 / 2,
+            alignContent: "center",
+          }}
+        >
+          <Entypo name="cross" size={25} color="red" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => swipeRef.current.swipeRight()}
+          style={{
+            justifyContent: "center",
+            height: 60,
+            width: 60,
+            backgroundColor: "#7fffd4",
+            alignItems: "center",
+            borderRadius: 60 / 2,
+            alignContent: "center",
+          }}
+        >
+          <AntDesign name="heart" size={22} color="green" />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
