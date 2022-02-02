@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useLayoutEffect, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,6 +12,8 @@ import useAuth from "./../hooks/useAuth";
 import { useTailwind } from "tailwind-rn";
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 import Swiper from "react-native-deck-swiper";
+import { doc, onSnapshot, collection } from "firebase/firestore";
+import { db } from "./../firebase";
 
 const DUMMY_DATA = [
   {
@@ -56,6 +58,39 @@ const HomeScreen = ({ navigation }) => {
   const { user, logout } = useAuth();
   const swipeRef = useRef(null);
   const tailwind = useTailwind();
+  const [profiles, setProfiles] = useState([]);
+
+//  add info your profile if there is no information in your profile.
+  useLayoutEffect(
+    () =>
+      onSnapshot(doc(db, "users", user.uid), (snapshot) => {
+        // console.log("snapshot:", snapshot);
+        if (!snapshot.exists()) {
+          navigation.navigate("Modal");
+        }
+      }),
+    []
+  );
+
+  // fetch your info from database.
+
+   useEffect(() => {
+     let unsub
+     const fetchCards = async () => {
+       const unsub =  onSnapshot(collection(db, "users"), snapshot => {
+          const profiles = snapshot.docs.filter(doc => doc.id !== user.uid).map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setProfiles(profiles);
+       })
+
+     }
+      fetchCards()
+
+    }, [])
+    console.log("profiles:", profiles);
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
@@ -82,7 +117,7 @@ const HomeScreen = ({ navigation }) => {
         <Swiper
           ref={swipeRef}
           containerStyle={{ backgroundColor: "transparent" }}
-          cards={DUMMY_DATA}
+          cards={profiles}
           stackSize={5}
           cardIndex={0}
           animateCardOpacity
@@ -109,60 +144,99 @@ const HomeScreen = ({ navigation }) => {
               },
             },
           }}
-          renderCard={(card) => (
-            <View
-              key={card.id}
-              style={{
-                // position: "relative",
-                backgroundColor: "white",
-                height: 500,
-                borderRadius: 10,
-                position: "absolute",
-                width: 360,
-              }}
-            >
-              {/* <Text style={{fontSize: 18, backgroundColor: 'grey'}}>{card.firstName}</Text> */}
-              <Image
-                style={{ height: 500, borderRadius: 10 }}
-                source={{ uri: card.photoURL }}
-              />
+          renderCard={(card) =>
+            card ? (
               <View
+                key={card.id}
                 style={{
+                  // position: "relative",
                   backgroundColor: "white",
+                  height: 500,
                   borderRadius: 10,
-                  height: 70,
-                  marginTop: 10,
                   position: "absolute",
                   width: 360,
-                  bottom: 0,
                 }}
               >
+                {/* <Text style={{fontSize: 18, backgroundColor: 'grey'}}>{card.firstName}</Text> */}
+                <Image
+                  style={{ height: 500, borderRadius: 10 }}
+                  source={{ uri: card.photoURL }}
+                />
                 <View
                   style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    margin: 15,
-                    shadowColor: "#000",
-                    shadowOffset: {
-                      width: 0,
-                      height: 1,
-                    },
-                    shadowOpacity: 0.2,
-                    shadowRadius: 1.41,
-                    elevation: 2,
+                    backgroundColor: "white",
+                    borderRadius: 10,
+                    height: 70,
+                    marginTop: 10,
+                    position: "absolute",
+                    width: 360,
+                    bottom: 0,
                   }}
                 >
-                  <View>
-                    <Text style={{ fontWeight: "bold" }}>
-                      {card.firstName} {card.lastName}
-                    </Text>
-                    <Text>{card.job}</Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      margin: 15,
+                      shadowColor: "#000",
+                      shadowOffset: {
+                        width: 0,
+                        height: 1,
+                      },
+                      shadowOpacity: 0.2,
+                      shadowRadius: 1.41,
+                      elevation: 2,
+                    }}
+                  >
+                    <View>
+                      <Text style={{ fontWeight: "bold" }}>
+                       {card.displayName}
+                      </Text>
+                      <Text>{card.job}</Text>
+                    </View>
+                    <Text style={{ fontWeight: "bold" }}>{card.age}</Text>
                   </View>
-                  <Text style={{ fontWeight: "bold" }}>{card.age}</Text>
                 </View>
               </View>
-            </View>
-          )}
+            ) : (
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "white",
+                  position: "absolute",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 1,
+                  },
+                  shadowOpacity: 0.2,
+                  shadowRadius: 1.41,
+                  elevation: 2,
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    marginTop: 20,
+                  }}
+                >
+                  {" "}
+                  No more profiles
+                </Text>
+                <Image
+                  style={{
+                    height: 400,
+                    width: 370,
+                    borderRadius: 10,
+                    resizeMode: "contain",
+                  }}
+                  source={require("./../assets/noProfiles2.jpg")}
+                />
+              </View>
+            )
+          }
         />
       </View>
 

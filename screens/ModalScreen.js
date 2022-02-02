@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import useAuth from "./../hooks/useAuth";
 import { db } from "./../firebase";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 
 const ModalScreen = ({ navigation }) => {
   const { user } = useAuth();
@@ -27,7 +27,7 @@ const ModalScreen = ({ navigation }) => {
       photoURL: image,
       job: job,
       age: age,
-    //   timestamp: serverTimestamp(),
+      timestamp: serverTimestamp(),
     }).then(() => {
         navigation.navigate("Home");
     }).catch((error) => {
@@ -68,7 +68,7 @@ const ModalScreen = ({ navigation }) => {
           <Text style={styles.profilePicture}>Step 1: Profile pic</Text>
           <TextInput
             value={image}
-            onChangeText={(text) => setImage(text)}
+            onChangeText={setImage}
             placeholder="Enter your profile pic url"
           />
         </View>
@@ -76,7 +76,7 @@ const ModalScreen = ({ navigation }) => {
           <Text style={styles.profilePicture}>Step 2: The job</Text>
           <TextInput
             value={job}
-            onChangeText={(text) => setJob(text)}
+            onChangeText={setJob}
             placeholder="Enter your occupation"
           />
         </View>
@@ -84,7 +84,7 @@ const ModalScreen = ({ navigation }) => {
           <Text style={styles.profilePicture}>Step 3: The Age</Text>
           <TextInput
             value={age}
-            onChangeText={(text) => setAge(text)}
+            onChangeText={setAge}
             placeholder="Enter your age"
             keyboardType="numeric"
             maxLength={2}
