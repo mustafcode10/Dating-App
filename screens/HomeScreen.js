@@ -12,8 +12,18 @@ import useAuth from "./../hooks/useAuth";
 import { useTailwind } from "tailwind-rn";
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 import Swiper from "react-native-deck-swiper";
-import { doc, onSnapshot, collection } from "firebase/firestore";
+import {
+  doc,
+  onSnapshot,
+  collection,
+  setDoc,
+  getDocs,
+  query,
+  where,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "./../firebase";
+import generatedId from "./../lib/generateId";
 
 const DUMMY_DATA = [
   {
@@ -60,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
   const tailwind = useTailwind();
   const [profiles, setProfiles] = useState([]);
 
-//  add info your profile if there is no information in your profile.
+  //  add info your profile if there is no information in your profile.
   useLayoutEffect(
     () =>
       onSnapshot(doc(db, "users", user.uid), (snapshot) => {
@@ -74,22 +84,56 @@ const HomeScreen = ({ navigation }) => {
 
   // fetch your info from database.
 
-   useEffect(() => {
-     let unsub
-     const fetchCards = async () => {
-       const unsub =  onSnapshot(collection(db, "users"), snapshot => {
-          const profiles = snapshot.docs.filter(doc => doc.id !== user.uid).map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
+  useEffect(() => {
+    let unsub;
+    const fetchCards = async () => {
+      const passes = await getDocs(
+        collection(db, "users", user.uid, "passes")
+      ).then((snapshot) => snapshot.docs.map((doc) => doc.id));
+      const swipes = await getDocs(
+        collection(db, "users", user.uid, "swipes")
+      ).then((snapshot) => snapshot.docs.map((doc) => doc.id));
+      const passedUserIds = passes.length > 0 ? passes : ["test"];
+      const swipedUserIds = swipes.length > 0 ? swipes : ["test"];
+      // console.log("passedUserIds:", passedUserIds, "swipedUserIds:", swipedUserIds);
+      const unsub = onSnapshot(
+        query(
+          collection(db, "users"),
+          where("id", "not-in", [...passedUserIds, ...swipedUserIds])
+        ),
+        (snapshot) => {
+          const profiles = snapshot.docs
+            .filter((doc) => doc.id !== user.uid)
+            .map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
           setProfiles(profiles);
-       })
+        }
+      );
+    };
+    fetchCards();
+  }, [db]);
+  // console.log("profiles:", profiles);
 
-     }
-      fetchCards()
+  const swipeLeft = (cardIndex) => {
+    if (!profiles[cardIndex]) {
+      return;
+    }
+    const userSwiped = profiles[cardIndex];
+    console.log(`You swiped passed on ${userSwiped.displayName}`);
+    setDoc(doc(db, "users", user.uid, "passes", userSwiped.id), userSwiped);
+  };
 
-    }, [])
-    console.log("profiles:", profiles);
+  const swipeRight = async (cardIndex) => {
+    if (!profiles[cardIndex]) {
+      return;
+    }
+    const userSwiped = profiles[cardIndex];
+
+    console.log(` Hooray, You matched with ${userSwiped.displayName}`);
+    setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id), userSwiped);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -122,8 +166,14 @@ const HomeScreen = ({ navigation }) => {
           cardIndex={0}
           animateCardOpacity
           verticalSwipe={false}
-          onSwipedLeft={(cardIndex) => console.log("swipe pass", cardIndex)}
-          onSwipedRight={(cardIndex) => console.log("swipe match", cardIndex)}
+          onSwipedLeft={(cardIndex) => {
+            // console.log("swipe pass", cardIndex);
+            swipeLeft(cardIndex);
+          }}
+          onSwipedRight={(cardIndex) => {
+            // console.log("swipe match", cardIndex);
+            swipeRight(cardIndex);
+          }}
           backgroundColor={"#4FD0E9"}
           overlayLabels={{
             left: {
@@ -190,7 +240,7 @@ const HomeScreen = ({ navigation }) => {
                   >
                     <View>
                       <Text style={{ fontWeight: "bold" }}>
-                       {card.displayName}
+                        {card.displayName}
                       </Text>
                       <Text>{card.job}</Text>
                     </View>
