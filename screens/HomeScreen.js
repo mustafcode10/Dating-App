@@ -134,7 +134,7 @@ const HomeScreen = ({ navigation }) => {
     const loggedInProfile = await (
       await getDoc(doc(db, "users", user.uid))
     ).data();
-
+    //Check if the User has already swiped on this user
     getDoc(doc(db, "users", userSwiped.id, "swipes", user.uid)).then(
       (documentSnapshot) => {
         if (documentSnapshot.exists()) {
