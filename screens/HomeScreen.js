@@ -21,9 +21,10 @@ import {
   query,
   where,
   serverTimestamp,
+  getDoc
 } from "firebase/firestore";
 import { db } from "./../firebase";
-import generatedId from "./../lib/generateId";
+import generateId from "./../lib/generateId";
 
 const DUMMY_DATA = [
   {
@@ -130,9 +131,45 @@ const HomeScreen = ({ navigation }) => {
       return;
     }
     const userSwiped = profiles[cardIndex];
+    const loggedInProfile = await (
+      await getDoc(doc(db, "users", user.uid))
+    ).data();
 
-    console.log(` Hooray, You matched with ${userSwiped.displayName}`);
-    setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id), userSwiped);
+    getDoc(doc(db, "users", userSwiped.id, "swipes", user.uid)).then(
+      (documentSnapshot) => {
+        if (documentSnapshot.exists()) {
+          // User has matched on you before swiped.
+          // Create a match
+          console.log(` Hooray, You matched with ${userSwiped.displayName}`);
+          setDoc(
+            doc(db, "users", user.uid, "swipes", userSwiped.id),
+            userSwiped
+          );
+          // CREATE A MATCH.
+          setDoc(doc(db, "matches", generateId(user.uid, userSwiped.id)), {
+            users: {
+              [user.uid]: loggedInProfile,
+              [userSwiped.id]: userSwiped,
+            },
+            userMatched: [user.uid, userSwiped.id],
+            timestamp: serverTimestamp(),
+          })
+             navigation.navigate("Match", {
+               loggedInProfile,
+               userSwiped,
+             });
+        } else {
+          console.log(` Hooray, you swiped with ${userSwiped.displayName}`);
+          setDoc(
+            doc(db, "users", user.uid, "swipes", userSwiped.id),
+            userSwiped
+          );
+        }
+      }
+    );
+
+    // console.log(` Hooray, You matched with ${userSwiped.displayName}`);
+    // setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id), userSwiped);
   };
 
   return (
