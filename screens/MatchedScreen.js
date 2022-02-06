@@ -1,7 +1,15 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
+import { useRoute } from '@react-navigation/native';
 
-const MatchedScreen = ({ navigation}) => {
+const MatchedScreen = ({navigation}) => {
+  console.log("navigation:", navigation);
+  const {params} = useRoute();
+  console.log("params:", params);
+  const { loggedInProfile, userSwiped } = params;
+  console.log("userSwiped:", userSwiped);
+  console.log("loggedInProfile:", loggedInProfile);
+
   return (
     <View style={styles.container}>
       <View style={styles.matchContainer}>
@@ -11,7 +19,7 @@ const MatchedScreen = ({ navigation}) => {
         />
         <View style={{ marginTop: 20 }}>
           <Text style={{ fontSize: 15, color: "white" }}>
-            You and she have liked each other.
+            You and {userSwiped.displayName} have liked each other.
           </Text>
         </View>
       </View>
@@ -26,23 +34,19 @@ const MatchedScreen = ({ navigation}) => {
       >
         <TouchableOpacity>
           <Image
-            style={{ width: 80, height: 80, borderRadius: 80 / 2 }}
-            source={require("./../assets/sumiQurox.jpg")}
+            style={{ width: 100, height: 100, borderRadius: 100 / 2 }}
+            source={{ uri: loggedInProfile.photoURL }}
           />
         </TouchableOpacity>
         <TouchableOpacity>
           <Image
-            style={{ width: 80, height: 80, borderRadius: 80 / 2 }}
-            source={require("./../assets/sumiQurox.jpg")}
+            style={{ width: 100, height: 100, borderRadius: 100 / 2 }}
+            source={{ uri: userSwiped.photoURL }}
           />
         </TouchableOpacity>
       </View>
       <View style={styles.sendMessageButton}>
-        <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
-          {/* <Image
-            style={{ width: 80, height: 80, borderRadius: 80 / 2 }}
-            source={require("./../assets/sumiQurox.jpg")}
-          /> */}
+        <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
           <Text style={styles.sendMessageText}>Send a Message</Text>
         </TouchableOpacity>
       </View>
@@ -80,5 +84,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     // color: "white",
     fontWeight: "bold",
-  }
+  },
 });
