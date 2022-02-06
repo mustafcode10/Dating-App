@@ -188,7 +188,7 @@ const HomeScreen = ({ navigation }) => {
             source={require("./../assets/tinder.png")}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Match")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
           <Ionicons name="chatbubbles-sharp" size={42} color="#FF5864" />
         </TouchableOpacity>
       </View>
