@@ -3,7 +3,6 @@ import React from "react";
 import { useRoute } from '@react-navigation/native';
 
 const MatchedScreen = ({navigation}) => {
-  console.log("navigation:", navigation);
   const {params} = useRoute();
   console.log("params:", params);
   const { loggedInProfile, userSwiped } = params;

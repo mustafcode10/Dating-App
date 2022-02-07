@@ -8,7 +8,6 @@ const ChatRow = ({ matchDetails }) => {
   //   console.log("matchDetails:", matchDetails);
   const { user } = useAuth();
   const navigation = useNavigation();
-  console.log("navigation:", navigation);
   const [matchedUserInfo, setMatchedUserInfo] = useState(null);
   useEffect(() => {
     setMatchedUserInfo(getMatchedUserInfo(matchDetails.users, user.uid));
@@ -16,14 +15,15 @@ const ChatRow = ({ matchDetails }) => {
 //   console.log("matchedUserInfo:", matchedUserInfo);
   return (
       <View style={[styles.chatStyle, styles.cardShadow]}>
-          <TouchableOpacity style={{ flexDirection: "row"}} onPress={() => navigation.navigate("Message")}>
+          <TouchableOpacity style={{ flexDirection: "row"}} onPress={() => navigation.navigate("Message", {
+            matchDetails,
+          })}>
       <Image
            style={{ width: 60, height: 60, borderRadius: 60/ 2, margin: 10 }}
             source={{ uri: matchedUserInfo?.photoURL }}
        />
        <View style={{ justifyContent: "center"}} >
        <Text style={{fontWeight: "bold"}} > {matchedUserInfo?.displayName}</Text>
-       <Text> Say Hi!!</Text>
        </View>
     </TouchableOpacity>
       </View>
