@@ -35,8 +35,8 @@ const ChatList = () => {
       renderItem={({ item }) => <ChatRow matchDetails={item} />}
     />
   ) : (
-      <View>
-       <Text>No matches</Text>
+      <View style={{margin: 5}}>
+       <Text style={{fontSize: 15, textAlign: 'center'}}>No matches 😊 </Text>
       </View>
    
   );

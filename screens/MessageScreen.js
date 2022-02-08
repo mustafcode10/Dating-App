@@ -33,6 +33,7 @@ const MessageScreen = () => {
   const { matchDetails } = params;
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
+  const complete = input;
 
   const sendMessage = () => {
     addDoc(collection(db, "matches", matchDetails.id, "messages"), {
@@ -62,7 +63,6 @@ const MessageScreen = () => {
       ),
     [matchDetails, db]
   );
- 
 
   return (
     <SafeAreaView style={styles.container}>
@@ -77,7 +77,7 @@ const MessageScreen = () => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <FlatList
-          inverted={-1}
+            inverted={-1}
             data={messages}
             keyExtractor={(item) => item.id}
             renderItem={({ item: message }) =>
@@ -98,8 +98,11 @@ const MessageScreen = () => {
             onChangeText={setInput}
             onSubmitEditing={sendMessage}
           />
-
-          <Button title="Send" color="#FF5864" onPress={sendMessage} />
+          {complete ? (
+            <Button title="Send" color="#FF5864" onPress={sendMessage} />
+          ) : (
+            <Button title="Send" color="blue" disabled />
+          )}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

@@ -5,7 +5,7 @@ const ReceiverMessage = ({ message }) => {
   return (
     <View style={styles.container}>
       <Image
-        style={{ width: 60, height: 60, borderRadius: 60 / 2, margin: 10 }}
+        style={{ width: 60, height: 60, borderRadius: 60 / 2,  }}
         source={{ uri: message.photoURL }}
       />
       <View style={styles.receierStyle}>
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    margin: 10,
+    margin: 5,
   },
   receierStyle: {
     backgroundColor: "#f08080",

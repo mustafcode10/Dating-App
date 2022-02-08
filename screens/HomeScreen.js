@@ -246,7 +246,7 @@ const HomeScreen = ({ navigation }) => {
               >
                 {/* <Text style={{fontSize: 18, backgroundColor: 'grey'}}>{card.firstName}</Text> */}
                 <Image
-                  style={{ height: 500, borderRadius: 10 }}
+                  style={{ height: 500, borderRadius: 10, }}
                   source={{ uri: card.photoURL }}
                 />
                 <View
@@ -315,7 +315,7 @@ const HomeScreen = ({ navigation }) => {
                 <Image
                   style={{
                     height: 400,
-                    width: 370,
+                    width: 360,
                     borderRadius: 10,
                     resizeMode: "contain",
                   }}
