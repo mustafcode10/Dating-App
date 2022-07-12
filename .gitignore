@@ -9,7 +9,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-README.md
+.README.md/
 
 # macOS
 .DS_Store
