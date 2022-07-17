@@ -10,7 +10,6 @@ npm-debug.*
 *.orig.*
 web-build/
 /firebase.js
-/google-services.json
-/GoogleServices-info.plist
+
 # macOS
 .DS_Store
