@@ -21,3 +21,5 @@ const auth = getAuth();
 const db = getFirestore();
 
 export {auth, db};
+
+// ignore the following line
