@@ -9,7 +9,8 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-readme.md
-
+/firebase.js
+/google-services.json
+/GoogleServices-info.plist
 # macOS
 .DS_Store
